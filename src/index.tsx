@@ -18,10 +18,11 @@ app.get("/test", async (c) => {
 app.get("/", async (c) => {
 	try {
 		// Store name in KV if it doesn't exist yet
-		await setName(c.env, c.env.MY_NAME);
+		// await setName(c.env, c.env.MY_NAME);
 
 		// Get name from KV
-		const name = (await getName(c.env)) || "Anonymous";
+		// const name = (await getName(c.env)) || "AI Reader";
+		const name = "AI Reader";
 
 		// Render home page
 		return c.render(<HomePage name={name} />);

@@ -1,0 +1,32 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "bookstore-summary-hono-ai",
+	"compatibility_date": "2025-03-04",
+	"pages_build_output_dir": "./dist",
+	"compatibility_flags": ["nodejs_compat"],
+	"vars": {
+		"MY_NAME": "AI Reader"
+	},
+	"kv_namespaces": [
+		{
+			"binding": "MY_KV",
+			"id": "4d2f93ca2a9946dab5474b535ec387c3"
+		}
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "books-g-ai",
+			"binding": "books_g_ai"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "books-db",
+			"database_id": "e737546f-7e4b-4012-8db6-17af5e0892e9"
+		}
+	],
+	"ai": {
+		"binding": "AI"
+	}
+}

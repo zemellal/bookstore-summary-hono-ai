@@ -1,0 +1,24 @@
+{
+	"name": "hono-ai",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build --mode client && vite build",
+		"test": "bun test",
+		"test:watch": "bun test --watch",
+		"preview": "wrangler pages dev",
+		"deploy": "bun run build && wrangler pages deploy"
+	},
+	"dependencies": {
+		"hono": "^4.7.2"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20250214.0",
+		"@hono/vite-build": "^1.2.0",
+		"@hono/vite-cloudflare-pages": "^0.4.2",
+		"@hono/vite-dev-server": "^0.18.2",
+		"@types/bun": "^1.2.4",
+		"vite": "^6.1.1",
+		"wrangler": "^3.109.2"
+	}
+}

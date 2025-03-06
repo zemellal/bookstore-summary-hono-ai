@@ -27,8 +27,43 @@ books.get("/:bookId", async (c) => {
 		// Check if we have book metadata in DB
 		const bookRecord = await getBookById(c.env, bookId);
 
+		// Check if we have the book content in R2
+		let bookContent = await getBookContent(c.env, bookId);
+
+		// If we're missing book content, fetch it from Gutenberg
+		if (!bookContent) {
+			try {
+				// Fetch from Project Gutenberg
+				bookContent = await fetchBookFromGutenberg(bookId);
+
+				// Save the content to R2
+				if (bookContent) {
+					await saveBookContent(c.env, bookId, bookContent);
+				} else {
+					// No content was returned
+					return c.render(
+						<ErrorComponent
+							title="Book Content Not Found"
+							message={`Could not fetch content for book with ID ${bookId}`}
+							returnUrl="/books"
+							returnText="Return to Library"
+						/>,
+					);
+				}
+			} catch (fetchError) {
+				return c.render(
+					<ErrorComponent
+						title="Book Content Error"
+						message={`Failed to fetch book content for ID ${bookId}`}
+						returnUrl="/books"
+						returnText="Return to Library"
+					/>,
+				);
+			}
+		}
+
+		// If we don't have the book record, try to fetch metadata
 		if (!bookRecord) {
-			// If no book record exists, try to fetch it
 			try {
 				// Fetch metadata from Gutenberg
 				const metadata = await getBookMetadata(bookId);
@@ -40,6 +75,16 @@ books.get("/:bookId", async (c) => {
 					if (newBookRecord) {
 						return c.render(<BookDetailsPage book={newBookRecord} />);
 					}
+				} else {
+					// No metadata found
+					return c.render(
+						<ErrorComponent
+							title="Book Not Found"
+							message={`Could not find book with ID ${bookId}`}
+							returnUrl="/books"
+							returnText="Return to Library"
+						/>,
+					);
 				}
 			} catch (fetchError) {
 				// If we can't fetch the metadata, show an error
@@ -78,6 +123,7 @@ books.get("/:bookId", async (c) => {
 		);
 	}
 });
+
 // books.get("/:bookId", async (c) => {
 // 	const bookId = c.req.param("bookId");
 
@@ -218,20 +264,22 @@ books.get("/:bookId/summary", async (c) => {
 		const extractedContent = extractBookContent(bookContent);
 
 		// Generate the AI summary
-		const summary = await generateBookSummary(
+		const result = await generateBookSummary(
 			c.env,
 			bookRecord.title,
 			extractedContent,
 		);
 
-		// Save the summary to the database
-		await saveBookSummary(c.env, bookId, summary);
+		// Only save successful summaries to the database
+		if (result.success) {
+			await saveBookSummary(c.env, bookId, result.summary);
+		}
 
 		// Render the summary page
 		return c.render(
 			<BookSummaryPage
 				bookTitle={bookRecord.title}
-				summary={summary}
+				summary={result.summary}
 				bookId={bookId}
 			/>,
 		);

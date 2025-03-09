@@ -22,11 +22,14 @@ export function BookItem({ book }: { book: BookData }) {
 			</div>
 
 			<div className="flex gap-2 mt-4">
-				<a href={`/books/${book.id}/read`} className="btn btn-primary btn-sm">
-					Read Book
+				<a href={`/books/${book.id}`} className="btn btn-sm">
+					Details
 				</a>
-				<a href={`/books/${book.id}/summary`} className="btn btn-sm">
-					AI Summary
+				<a
+					href={`/books/${book.id}/summary`}
+					className="btn btn-primary btn-sm"
+				>
+					{book.summary ? "View AI Summary" : "Generate AI Summary"}
 				</a>
 			</div>
 		</li>
@@ -57,5 +60,56 @@ export function BookList({ books }: { books: BookData[] }) {
 				</div>
 			)}
 		</section>
+	);
+}
+
+/**
+ * Component for rendering book details card
+ */
+export function BookDetails({ book }: { book: BookData }) {
+	return (
+		<div className="card mb-2">
+			<h2 className="text-2xl mb-2">Book Details</h2>
+			<p>
+				<strong>Author:</strong> {book.author}
+			</p>
+
+			<div className="flex gap-4 mt-4">
+				<a href={`/books/${book.id}/read`} className="btn">
+					Read Full Book
+				</a>
+			</div>
+		</div>
+	);
+}
+
+/**
+ * Component for rendering book summary card
+ */
+export function BookSummary({ book }: { book: BookData }) {
+	return (
+		<>
+			{book.summary ? (
+				<div className="card">
+					<h2 className="text-2xl mb-2">Summary Preview</h2>
+					<p className="italic">{book.summary.substring(0, 150)}...</p>
+					<div className="mt-2">
+						<a href={`/books/${book.id}/summary`} className="btn btn-primary">
+							Read Full Summary
+						</a>
+					</div>
+				</div>
+			) : (
+				<div className="card">
+					<h2 className="text-2xl mb-2">No Summary Available</h2>
+					<p>This book doesn't have an AI-generated summary yet.</p>
+					<div className="mt-2">
+						<a href={`/books/${book.id}/summary`} className="btn btn-primary">
+							Generate Summary
+						</a>
+					</div>
+				</div>
+			)}
+		</>
 	);
 }

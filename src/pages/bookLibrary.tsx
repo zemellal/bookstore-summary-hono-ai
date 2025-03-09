@@ -14,7 +14,7 @@ export default function BookLibraryPage({ books }: { books: BookData[] }) {
 
 			<div className="mt-4">
 				<a href="/" className="btn">
-					Return Home
+					Home
 				</a>
 			</div>
 		</div>

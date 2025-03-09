@@ -21,8 +21,7 @@ export async function getBookById(
 }
 
 export async function getAllBooks(env: Bindings): Promise<BookData[]> {
-	const query =
-		"SELECT id, title, author, created_at FROM books ORDER BY created_at DESC";
+	const query = "SELECT * FROM books ORDER BY created_at DESC";
 	const { results } = await env.DB.prepare(query).all<BookData>();
 
 	return results || [];

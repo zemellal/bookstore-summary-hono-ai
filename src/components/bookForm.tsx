@@ -2,11 +2,7 @@ export function BookSearchForm() {
 	return (
 		<div style={{ marginBottom: "1rem" }}>
 			<h2>Get a Book by ID</h2>
-			<form
-				action="/books"
-				method="get"
-				onSubmit="event.preventDefault(); window.location.href = '/books/' + document.getElementById('bookId').value;"
-			>
+			<form action="/books" method="post">
 				<div className="form-group">
 					<label
 						htmlFor="bookId"
